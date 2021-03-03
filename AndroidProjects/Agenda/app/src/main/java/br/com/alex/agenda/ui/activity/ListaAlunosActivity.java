@@ -1,28 +1,44 @@
 package br.com.alex.agenda.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import br.com.alex.agenda.R;
+import br.com.alex.agenda.dao.AlunoDAO;
 
 public class ListaAlunosActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
-        List<String> alunos = new ArrayList<>(Arrays.asList("Alex", "Cindy", "Maria", "Pedro", "João",
-                "Benedito"));
-        ListView listaDeAlunos = findViewById(R.id.activity_lista_alunos_listview);
-        listaDeAlunos.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, alunos));
         setTitle("Lista de Alunos");
+
+        FloatingActionButton btnNovoAluno = findViewById(R.id.activity_lista_alunos_fab_novo_aluno);
+        btnNovoAluno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ListaAlunosActivity.this,
+                        FormularioAlunoActivity.class));
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AlunoDAO dao = new AlunoDAO();
+
+        ListView listaDeAlunos = findViewById(R.id.activity_lista_alunos_listview);
+        listaDeAlunos.setAdapter(new ArrayAdapter<>(this, android.R.layout.
+                simple_list_item_1, dao.todos()));
     }
 }
